@@ -1,4 +1,3 @@
-// app.js
 
 const API_URL = "https://script.google.com/macros/s/AKfycbyvtvYWLmkq8AqmCEhf_FP5fYLaliFpz_p-Jx4_miEM1vgCvHIM8qDS06A5kKP9F6W0ZA/exec";
 
@@ -47,17 +46,6 @@ function buildProductMeta(name){
   return `<div class="meta">${titleHtml}${codeHtml}${priceHtml}</div>`;
 }
 
-// EDIT: clickable helper (div cards)
-function makeClickable(el, handler){
-  el.addEventListener('click', handler);
-  el.addEventListener('keydown', (e) => {
-    if(e.key === 'Enter' || e.key === ' '){
-      e.preventDefault();
-      handler();
-    }
-  });
-}
-
 window.onload = function() {
   if (!currentID) { document.getElementById('loading').innerHTML = "ID Yok"; return; }
   document.getElementById('certId').innerText = currentID;
@@ -79,14 +67,10 @@ window.onload = function() {
         document.getElementById('companyName').innerText = "Güncelleme Gerekli";
         document.getElementById('companySlogan').innerText = "Eski şifreli kayıt";
         document.getElementById('view-panel').style.display = 'block';
-        const bp = document.getElementById('btnProducts');
-        const ba = document.getElementById('btnAds');
-        const bd = document.getElementById('btnDaily');
-        if(bp) bp.style.display='none';
-        if(ba) ba.style.display='none';
-        if(bd) bd.style.display='none';
-        const fb = document.getElementById('flashBox');
-        if(fb) fb.style.display='none';
+        document.getElementById('btnProducts').style.display='none';
+        document.getElementById('btnAds').style.display='none';
+        document.getElementById('btnDaily').style.display='none';
+        document.getElementById('flashBox').style.display='none';
         return;
       }
 
@@ -119,24 +103,26 @@ window.onload = function() {
 
       document.getElementById('companyName').innerText = pageData.company || "Dijital Katalog";
       document.getElementById('companySlogan').innerText = pageData.slogan || "";
-
-      // EDIT: V-Card = sadece şirket adı + Digital V Card
       const vcardName = document.getElementById('vcardName');
-      const vcardSub = document.getElementById('vcardSub');
-      if(vcardName) vcardName.innerText = pageData.company || "İşletme";
-      if(vcardSub) vcardSub.innerText = "Digital V Card";
+      const vcardSlogan = document.getElementById('vcardSlogan');
+      const vcardPhone = document.getElementById('vcardPhone');
+      // EDIT: v-card text binding
+      if(vcardName){
+        vcardName.innerText = pageData.company || "İşletme Kartı";
+      }
+      if(vcardSlogan){
+        vcardSlogan.innerText = pageData.slogan || "Kurumsal Dijital Kart";
+      }
+      if(vcardPhone){
+        vcardPhone.innerText = pageData.phone || pageData.whats || "+90 5xx xxx xx xx";
+      }
 
-      // (butonlar UI'da kalksa bile, varlıklarına göre eski kontrolleri bozmayalım)
-      const bp = document.getElementById('btnProducts');
-      const ba = document.getElementById('btnAds');
-      const bd = document.getElementById('btnDaily');
-      if (bp && !pageData.pLink) bp.style.display='none';
-      if (ba && !pageData.vLink) ba.style.display='none';
-      if (bd && !pageData.daily) bd.style.display='none';
+      if (!pageData.pLink) document.getElementById('btnProducts').style.display='none';
+      if (!pageData.vLink) document.getElementById('btnAds').style.display='none';
+      if (!pageData.daily) document.getElementById('btnDaily').style.display='none';
 
       renderFlash();
       renderGrids();
-      renderFeatured(); // EDIT
       document.getElementById('view-panel').style.display = 'block';
     })
     .catch(() => alert("Bağlantı Hatası: URL'yi kontrol et."));
@@ -154,8 +140,7 @@ function renderFlash(){
   const newT = document.getElementById('newPriceText');
   const title = document.getElementById('flashTitle');
   const flashState = document.getElementById('flashState');
-
-  if(!img || !ph || !oldT || !newT || !title) return;
+  if(!flashState) return;
 
   const label = (pageData.flashLabel || "FLAŞ FIRSAT").trim();
   title.innerHTML = `<i class="fas fa-bolt"></i> ${escapeHtml(label).toUpperCase()}`;
@@ -174,25 +159,24 @@ function renderFlash(){
     ph.style.display = 'flex';
   }
 
-  // Eski işleyiş bozulmasın (CSS zaten gizli olabilir)
-  if(flashState){
-    if(pageData.review){
-      flashState.style.display = 'inline-flex';
-      flashState.innerText = "⭐ Değerlendir & Puan Ver";
-      flashState.style.cursor = 'pointer';
-      flashState.onclick = () => window.open(pageData.review, "_blank", "noopener,noreferrer");
-    } else {
-      flashState.style.display = 'none';
-      flashState.onclick = null;
-    }
+  if(pageData.review){
+    flashState.style.display = 'inline-flex';
+    flashState.innerText = "⭐ Değerlendir & Puan Ver";
+    flashState.style.cursor = 'pointer';
+    flashState.style.borderColor = 'rgba(239,192,123,.5)';
+    flashState.style.background = 'rgba(239,192,123,.14)';
+    flashState.style.boxShadow = '0 8px 18px rgba(0,0,0,.25), 0 0 12px rgba(239,192,123,.25)';
+    flashState.onclick = () => window.open(pageData.review, "_blank", "noopener,noreferrer");
+  } else {
+    flashState.style.display = 'none';
+    flashState.onclick = null;
   }
 }
 
 // EDIT: grid placeholders
 function buildGridPlaceholders(label, context){
   const cards = [];
-  const count = context === 'vitrin' ? 2 : 6;
-  for(let i = 0; i < count; i++){
+  for(let i = 0; i < 6; i++){
     const extraClass = context === 'vitrin' ? ' vitrin-card' : '';
     cards.push(`
       <div class="grid-card placeholder-card${extraClass}">
@@ -207,7 +191,6 @@ function buildGridPlaceholders(label, context){
 function renderGrids(){
   const productGrid = document.getElementById('productGrid');
   const vitrinGrid = document.getElementById('vitrinGrid');
-
   if(productGrid){
     renderGrid("product", pageData.pLink, productGrid, "Ürün");
   }
@@ -241,62 +224,48 @@ function renderGrid(context, link, grid, label){
 
       grid.innerHTML = "";
       data.files.forEach(file => {
-        const card = document.createElement('div'); // EDIT: button yerine div (buton içi offer butonla çakışmasın)
+        const card = document.createElement('button');
+        card.type = 'button';
         card.className = context === 'vitrin' ? 'grid-card vitrin-card' : 'grid-card';
-        card.setAttribute('role','button');
-        card.tabIndex = 0;
-
         const name = (file.name || "").trim();
 
         if(context === 'vitrin'){
-          const proxyUrl = file.type === 'image'
-            ? ("https://lh3.googleusercontent.com/d/" + file.id + "=s1200")
-            : "";
-
-          card.innerHTML = `
-            <div class="grid-media vitrin-media">
-              ${proxyUrl ? `<img src="${proxyUrl}" alt="">` : ``}
-              <span class="vitrin-play"><i class="fas fa-play"></i></span>
-            </div>
-            <div class="grid-caption">${escapeHtml(name || label)}</div>
-          `;
-
-          // EDIT: vitrin tıklanınca vitrin butonu gibi açılacak (drive'a yönlendirme yok)
-          makeClickable(card, () => openGallery('video'));
-        }
-        else if(file.type === 'image'){
+          // EDIT: vitrin cards open existing gallery
+          if(file.type === 'image'){
+            const proxyUrl = "https://lh3.googleusercontent.com/d/" + file.id + "=s1200";
+            card.innerHTML = `
+              <div class="grid-media vitrin-media">
+                <img src="${proxyUrl}" alt="">
+                <span class="vitrin-play"><i class="fas fa-play"></i></span>
+              </div>
+              <div class="grid-caption">${escapeHtml(name || label)}</div>
+            `;
+          } else {
+            card.innerHTML = `
+              <div class="grid-media vitrin-media">
+                <span class="vitrin-play"><i class="fas fa-play"></i></span>
+              </div>
+              <div class="grid-caption">${escapeHtml(name || label)}</div>
+            `;
+          }
+          card.addEventListener('click', () => openGallery('video'));
+        } else if(file.type === 'image'){
           const proxyUrl = "https://lh3.googleusercontent.com/d/" + file.id + "=s1200";
-          const meta = parseProductMeta(name);
-          const offerText = meta?.title ? meta.title : (name || label);
-
           card.innerHTML = `
             <div class="grid-media">
               <img src="${proxyUrl}" alt="">
             </div>
-            <div class="grid-caption">${escapeHtml(meta?.title || name || label)}</div>
-            <button type="button" class="offer-btn"><i class="fab fa-whatsapp"></i> WhatsApp ile teklif al</button>
+            <div class="grid-caption">${escapeHtml(name || label)}</div>
           `;
-
-          // Kart tık = detay (mevcut işleyiş)
-          const metaHtml = buildProductMeta(name);
-          makeClickable(card, () => openMediaModal({
+          const metaHtml = context === 'product' ? buildProductMeta(name) : "";
+          card.addEventListener('click', () => openMediaModal({
             context,
             title: name || label,
             mediaType: 'image',
             src: proxyUrl,
             metaHtml
           }));
-
-          // EDIT: teklif butonu sadece o ürün için
-          const btn = card.querySelector('.offer-btn');
-          if(btn){
-            btn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              orderOnWhatsApp(offerText);
-            });
-          }
-        }
-        else if(file.type === 'video'){
+        } else if(file.type === 'video'){
           const videoUrl = `https://drive.google.com/file/d/${file.id}/preview`;
           card.innerHTML = `
             <div class="grid-media video">
@@ -304,7 +273,7 @@ function renderGrid(context, link, grid, label){
             </div>
             <div class="grid-caption">${escapeHtml(name || label)}</div>
           `;
-          makeClickable(card, () => openMediaModal({
+          card.addEventListener('click', () => openMediaModal({
             context,
             title: name || label,
             mediaType: 'video',
@@ -328,7 +297,6 @@ function openMediaModal(payload){
   if(!modal || !body || !title) return;
 
   title.innerText = payload.title || (payload.context === 'vitrin' ? 'Vitrin' : 'Ürün');
-
   let mediaHtml = "";
   if(payload.mediaType === 'video'){
     mediaHtml = `<div class="modal-media video"><iframe src="${payload.src}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
@@ -337,13 +305,7 @@ function openMediaModal(payload){
   }
 
   const metaHtml = payload.metaHtml ? `<div class="modal-meta">${payload.metaHtml}</div>` : "";
-
-  // EDIT: modal teklif butonu da ürün bazlı çalışsın
-  const productTitle = (payload.title || "").trim();
-  const safeTitle = productTitle.replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/\n/g, " ");
-  const actionHtml = payload.context === 'product'
-    ? `<button class="btn-whatsapp modal-whatsapp" onclick="orderOnWhatsApp('${safeTitle}')">WhatsApp ile teklif al</button>`
-    : "";
+  const actionHtml = payload.context === 'product' ? `<button class="btn-whatsapp modal-whatsapp" onclick="orderOnWhatsApp()">WhatsApp Teklif Al</button>` : "";
 
   body.innerHTML = `${mediaHtml}${metaHtml}${actionHtml}`;
   modal.style.display = 'flex';
@@ -352,38 +314,11 @@ function openMediaModal(payload){
 function closeMediaModal(){
   const modal = document.getElementById('mediaModal');
   const body = document.getElementById('mediaModalBody');
-  if(modal) modal.style.display = 'none';
-  if(body) body.innerHTML = '';
-}
-
-// EDIT: Öne Çıkanlar (vitrinden sonra 2'li grid)
-function renderFeatured(){
-  const section = document.getElementById('featuredSection');
-  const grid = document.getElementById('featuredGrid');
-  if(!section || !grid) return;
-
-  if(!pageData.daily){
-    section.style.display = 'none';
-    return;
+  if(modal){
+    modal.style.display = 'none';
   }
-  section.style.display = 'block';
-
-  const fileId = getDriveId(pageData.daily);
-  const thumb = fileId ? `https://lh3.googleusercontent.com/d/${fileId}=s1200` : "";
-
-  grid.innerHTML = `
-    <div class="featured-card" role="button" tabindex="0" id="featuredCard1">
-      <div class="featured-thumb">
-        ${thumb ? `<img src="${thumb}" alt="">` : `<i class="fas fa-star"></i>`}
-      </div>
-      <div class="featured-title">Öne Çıkan</div>
-      <div class="featured-sub">Dokun • Aç</div>
-    </div>
-  `;
-
-  const c1 = document.getElementById('featuredCard1');
-  if(c1){
-    makeClickable(c1, () => openDaily());
+  if(body){
+    body.innerHTML = '';
   }
 }
 
@@ -391,7 +326,7 @@ function openDaily(){
   if(!pageData.daily) return;
   const overlay = document.getElementById('gallery-overlay');
   const slider = document.getElementById('slider-track');
-  document.getElementById('galTitle').innerText = "Öne Çıkanlar";
+  document.getElementById('galTitle').innerText = "Ürün tanıtımı";
   slider.innerHTML = "";
   overlay.style.display = 'flex';
 
@@ -407,7 +342,7 @@ function openDaily(){
 function openGallery(type) {
   let link = "";
   let title = "";
-  if(type === 'video') { link = pageData.vLink; title = "Vitrin"; }
+  if(type === 'video') { link = pageData.vLink; title = "Reklamlar"; }
   if(type === 'photo') { link = pageData.pLink; title = "Ürünlerimiz"; }
   if(!link) return;
 
@@ -433,11 +368,9 @@ function openGallery(type) {
       data.files.forEach(file => {
         const slide = document.createElement('div');
         slide.className = 'slide';
-
         if(file.type === 'image') {
           const proxyUrl = "https://lh3.googleusercontent.com/d/" + file.id + "=s2000";
           const name = (file.name || "").trim();
-
           if(type === 'photo'){
             const metaHtml = buildProductMeta(name);
             slide.innerHTML = `
@@ -456,12 +389,10 @@ function openGallery(type) {
               </div>
             `;
           }
-        }
-        else if (file.type === 'video') {
+        } else if (file.type === 'video') {
           const videoUrl = `https://drive.google.com/file/d/${file.id}/preview`;
           slide.innerHTML = `<div class="video-wrapper"><iframe src="${videoUrl}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
         }
-
         slider.appendChild(slide);
       });
     });
@@ -476,8 +407,7 @@ function normalizeHandle(h){ return (h||"").trim().replace(/^@/,'').replace(/\s+
 function normalizeWhats(w){ return (w||"").replace(/[^\d]/g,'').replace(/^0/,'90'); }
 function normalizeTel(t){ return (t||"").replace(/\s+/g,''); }
 
-// EDIT: ürün bazlı WhatsApp mesajı (param opsiyonel)
-function orderOnWhatsApp(productTitle){
+function orderOnWhatsApp(){
   const num = normalizeWhats(pageData.whats || pageData.phone);
   if(!num){
     alert("WhatsApp/Telefon numarası eklenmemiş. Yönetici panelinden ekleyin.");
@@ -485,10 +415,7 @@ function orderOnWhatsApp(productTitle){
   }
 
   const msgLines = [];
-  msgLines.push(`Merhaba, ${pageData.company || "işletme"} için teklif istiyorum.`);
-  if(productTitle){
-    msgLines.push(`Ürün: ${productTitle}`);
-  }
+  msgLines.push(`Merhaba, ${pageData.company || "işletme"} için sipariş/teklif istiyorum.`);
   if(pageData.flashNew || pageData.flashOld){
     msgLines.push(`Anlık Kampanya: ${pageData.flashOld ? ("Eski: " + pageData.flashOld) : ""}${(pageData.flashOld && pageData.flashNew) ? " | " : ""}${pageData.flashNew ? ("Yeni: " + pageData.flashNew) : ""}`);
   }
@@ -789,8 +716,11 @@ function buildVCard(){
   lines.push(`ORG:${sanitizeVCardValue(company)}`);
 
   if(phone) lines.push(`TEL;TYPE=CELL,VOICE:${sanitizeVCardValue(phone)}`);
+
   if(email) lines.push(`EMAIL;TYPE=INTERNET:${sanitizeVCardValue(email)}`);
+
   if(address) lines.push(`ADR;TYPE=WORK:;;${sanitizeVCardValue(address)};;;;`);
+
   lines.push(`URL:${sanitizeVCardValue(window.location.href)}`);
 
   const noteParts = [];
