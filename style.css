@@ -1735,3 +1735,9 @@ body{
 
 /* EDIT: Kataloğu Kaydet (UI gizli) zaten var */
 .secondary-actions.hide-save{ display:none !important; }
+
+/* ÜRÜNLERİMİZ kartlarındaki WhatsApp teklif butonunu pasifleştir/gizle */
+#productsSection .grid-cta{
+  display: none !important;
+  pointer-events: none !important;
+}
