@@ -25,7 +25,6 @@
           <div class="company-name" id="companyName">...</div>
           <div class="company-slogan" id="companySlogan">...</div>
         </div>
-        <!-- EDIT: removed top daily button placement -->
         <div class="header-actions">
           <button class="header-btn whatsapp" onclick="orderOnWhatsApp()"><i class="fab fa-whatsapp"></i> Bilgi Al</button>
           <button class="header-btn phone" onclick="window.open(`tel:${normalizeTel(pageData.phone || pageData.whats || '')}`)"><i class="fas fa-phone"></i></button>
@@ -136,37 +135,30 @@
           </div>
         </div>
         <div class="cert-line"></div>
-        <!-- EDIT: v-card content -->
-        <div class="vcard-shell" onclick="openCardModal()">
-          <div class="vcard-chip">V-Card</div>
+
+        <!-- EDIT: V-CARD (Gri + Beyaz, sadece şirket adı + Digital V Card) -->
+        <div class="vcard-shell vcard-shell--gray" onclick="openCardModal()">
           <div class="vcard-body">
-            <div class="vcard-title" id="vcardName">İşletme Kartı</div>
-            <div class="vcard-sub" id="vcardSlogan">Kurumsal Dijital Kart</div>
-            <div class="vcard-meta">
-              <span class="vcard-meta-item" id="vcardPhone">+90 5xx xxx xx xx</span>
-            </div>
+            <div class="vcard-title vcard-title--white" id="vcardName">...</div>
+            <div class="vcard-sub vcard-sub--white">Digital V Card</div>
           </div>
-          <div class="vcard-icon"><i class="fas fa-id-card"></i></div>
+          <div class="vcard-icon vcard-icon--gray"><i class="fas fa-id-card"></i></div>
         </div>
       </div>
 
+      <!-- EDIT: ÜST BUTONLAR TAMAMEN KALDIRILDI (dock UI gizli, işlevler bozulmaz) -->
       <div class="dock">
         <div class="dock-inner">
-          <!-- EDIT: hide digital card button -->
           <div class="dock-btn dock-primary dock-card" onclick="openCardModal()" title="Kart / Rehbere Kaydet">
             <i class="fas fa-qrcode"></i>
           </div>
-
           <div class="dock-btn" onclick="openGallery('photo')" id="btnProducts" title="Ürünlerimiz">
             <i class="fas fa-cart-shopping"></i>
           </div>
-
           <div class="dock-btn" onclick="openGallery('video')" id="btnAds" title="Videolu Reklamlar">
             <i class="fas fa-store"></i>
           </div>
         </div>
-
-        <!-- EDIT: hide digital card label -->
         <div class="dock-labels">
           <span class="dock-label-card">Dijital Kart</span>
           <span>Ürünlerimiz</span>
@@ -174,10 +166,9 @@
         </div>
       </div>
 
-      <!-- EDIT: section header with daily button -->
-      <div class="section-head">
+      <!-- EDIT: Başlık sadece yazı (buton yok) -->
+      <div class="section-head section-head--titleonly">
         <div class="section-label">Bugünün Fırsatı</div>
-        <button class="daily-inline-btn" onclick="openDaily()" id="btnDaily"><i class="fas fa-star"></i> Öne Çıkanlar</button>
       </div>
 
       <div class="flash glass" id="flashBox">
@@ -193,6 +184,7 @@
           </div>
           <img id="flashImg" alt="" style="display:none;">
         </div>
+
         <div class="product-text">
           <div class="product-title">Premium Akıllı Paket</div>
           <div class="product-desc">En yeni seri, modern tasarım ve sınırlı stok avantajı.</div>
@@ -213,19 +205,25 @@
           <button class="btn-whatsapp" onclick="orderOnWhatsApp()">WhatsApp’tan Bilgi Al</button>
         </div>
 
-        <!-- EDIT: products grid -->
+        <!-- EDIT: Ürünlerimiz (3'lü grid + her kart altında WhatsApp teklif) -->
         <div class="grid-section" id="productsSection">
           <div class="grid-title">Ürünlerimiz</div>
           <div class="grid-list" id="productGrid"></div>
         </div>
 
-        <!-- EDIT: vitrin grid -->
+        <!-- EDIT: Vitrin (YouTube mobil liste kartı gibi) -->
         <div class="grid-section" id="vitrinSection">
           <div class="grid-title">Vitrin</div>
-          <div class="grid-list vitrin-grid" id="vitrinGrid"></div>
+          <div class="vitrin-list" id="vitrinGrid"></div>
         </div>
 
-        <!-- EDIT: review button -->
+        <!-- EDIT: Öne Çıkanlar (Vitrinden sonra, 2'li grid) -->
+        <div class="grid-section" id="featuredSection" style="display:none;">
+          <div class="grid-title">Öne Çıkanlar</div>
+          <div class="featured-grid" id="featuredGrid"></div>
+        </div>
+
+        <!-- EDIT: Google yorum butonu (yıldızlı) -->
         <button class="review-btn" onclick="pageData.review ? window.open(pageData.review, '_blank', 'noopener,noreferrer') : openCardModal()">
           <span class="review-stars">
             <i class="fas fa-star"></i>
@@ -237,7 +235,7 @@
           <span>Bizi Değerlendir – Google Yorum</span>
         </button>
 
-        <!-- EDIT: hide save catalog button -->
+        <!-- EDIT: Kataloğu Kaydet UI kaldırıldı (gizli kalacak) -->
         <div class="secondary-actions hide-save">
           <button class="secondary-btn" onclick="openCardModal()">
             <span class="secondary-icon"><i class="fas fa-bookmark"></i></span>
