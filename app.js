@@ -1,3 +1,4 @@
+
 const API_URL = "https://script.google.com/macros/s/AKfycbyvtvYWLmkq8AqmCEhf_FP5fYLaliFpz_p-Jx4_miEM1vgCvHIM8qDS06A5kKP9F6W0ZA/exec";
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -102,12 +103,17 @@ window.onload = function() {
 
       document.getElementById('companyName').innerText = pageData.company || "Dijital Katalog";
       document.getElementById('companySlogan').innerText = pageData.slogan || "";
+      const vcardName = document.getElementById('vcardName');
+      if(vcardName){
+        vcardName.innerText = pageData.company || "İşletme Kartı";
+      }
 
       if (!pageData.pLink) document.getElementById('btnProducts').style.display='none';
       if (!pageData.vLink) document.getElementById('btnAds').style.display='none';
       if (!pageData.daily) document.getElementById('btnDaily').style.display='none';
 
       renderFlash();
+      renderGrids();
       document.getElementById('view-panel').style.display = 'block';
     })
     .catch(() => alert("Bağlantı Hatası: URL'yi kontrol et."));
@@ -155,6 +161,133 @@ function renderFlash(){
   } else {
     flashState.style.display = 'none';
     flashState.onclick = null;
+  }
+}
+
+function buildGridPlaceholders(label){
+  const cards = [];
+  for(let i = 0; i < 6; i++){
+    cards.push(`
+      <div class="grid-card placeholder-card">
+        <div class="grid-media placeholder-media"></div>
+        <div class="grid-caption">${label}</div>
+      </div>
+    `);
+  }
+  return cards.join("");
+}
+
+function renderGrids(){
+  const productGrid = document.getElementById('productGrid');
+  const vitrinGrid = document.getElementById('vitrinGrid');
+  if(productGrid){
+    renderGrid("product", pageData.pLink, productGrid, "Ürün");
+  }
+  if(vitrinGrid){
+    renderGrid("vitrin", pageData.vLink, vitrinGrid, "Vitrin");
+  }
+
+  const modal = document.getElementById('mediaModal');
+  if(modal && !modal.dataset.bound){
+    modal.addEventListener('click', (event) => {
+      if(event.target === modal){
+        closeMediaModal();
+      }
+    });
+    modal.dataset.bound = '1';
+  }
+}
+
+function renderGrid(context, link, grid, label){
+  if(!grid) return;
+  grid.innerHTML = buildGridPlaceholders(label);
+  if(!link) return;
+
+  fetch(API_URL + "?action=getFiles&url=" + encodeURIComponent(link))
+    .then(res => res.json())
+    .then(data => {
+      if(data.status === "error" || !data.files || data.files.length === 0){
+        grid.innerHTML = buildGridPlaceholders(label);
+        return;
+      }
+
+      grid.innerHTML = "";
+      data.files.forEach(file => {
+        const card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'grid-card';
+        const name = (file.name || "").trim();
+
+        if(file.type === 'image'){
+          const proxyUrl = "https://lh3.googleusercontent.com/d/" + file.id + "=s1200";
+          card.innerHTML = `
+            <div class="grid-media">
+              <img src="${proxyUrl}" alt="">
+            </div>
+            <div class="grid-caption">${escapeHtml(name || label)}</div>
+          `;
+          const metaHtml = context === 'product' ? buildProductMeta(name) : "";
+          card.addEventListener('click', () => openMediaModal({
+            context,
+            title: name || label,
+            mediaType: 'image',
+            src: proxyUrl,
+            metaHtml
+          }));
+        } else if(file.type === 'video'){
+          const videoUrl = `https://drive.google.com/file/d/${file.id}/preview`;
+          card.innerHTML = `
+            <div class="grid-media video">
+              <iframe src="${videoUrl}" allow="autoplay; fullscreen" allowfullscreen></iframe>
+            </div>
+            <div class="grid-caption">${escapeHtml(name || label)}</div>
+          `;
+          card.addEventListener('click', () => openMediaModal({
+            context,
+            title: name || label,
+            mediaType: 'video',
+            src: videoUrl,
+            metaHtml: ""
+          }));
+        }
+
+        grid.appendChild(card);
+      });
+    })
+    .catch(() => {
+      grid.innerHTML = buildGridPlaceholders(label);
+    });
+}
+
+function openMediaModal(payload){
+  const modal = document.getElementById('mediaModal');
+  const body = document.getElementById('mediaModalBody');
+  const title = document.getElementById('mediaModalTitle');
+  if(!modal || !body || !title) return;
+
+  title.innerText = payload.title || (payload.context === 'vitrin' ? 'Vitrin' : 'Ürün');
+  let mediaHtml = "";
+  if(payload.mediaType === 'video'){
+    mediaHtml = `<div class="modal-media video"><iframe src="${payload.src}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
+  } else {
+    mediaHtml = `<div class="modal-media"><img src="${payload.src}" alt=""></div>`;
+  }
+
+  const metaHtml = payload.metaHtml ? `<div class="modal-meta">${payload.metaHtml}</div>` : "";
+  const actionHtml = payload.context === 'product' ? `<button class="btn-whatsapp modal-whatsapp" onclick="orderOnWhatsApp()">WhatsApp Teklif Al</button>` : "";
+
+  body.innerHTML = `${mediaHtml}${metaHtml}${actionHtml}`;
+  modal.style.display = 'flex';
+}
+
+function closeMediaModal(){
+  const modal = document.getElementById('mediaModal');
+  const body = document.getElementById('mediaModalBody');
+  if(modal){
+    modal.style.display = 'none';
+  }
+  if(body){
+    body.innerHTML = '';
   }
 }
 
