@@ -1,4 +1,3 @@
-<!-- index.html (GÜNCEL) -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -22,22 +21,16 @@
         <div class="company-logo" aria-hidden="true">
           <i class="fas fa-screwdriver-wrench"></i>
         </div>
-
         <div class="header-title">
           <div class="company-name" id="companyName">...</div>
           <div class="company-slogan" id="companySlogan">...</div>
         </div>
-
+        <!-- EDIT: removed top daily button placement -->
         <div class="header-actions">
-          <button class="header-btn whatsapp" onclick="orderOnWhatsApp()">
-            <i class="fab fa-whatsapp"></i> Bilgi Al
-          </button>
-          <button class="header-btn phone" onclick="window.open(`tel:${normalizeTel(pageData.phone || pageData.whats || '')}`)">
-            <i class="fas fa-phone"></i>
-          </button>
+          <button class="header-btn whatsapp" onclick="orderOnWhatsApp()"><i class="fab fa-whatsapp"></i> Bilgi Al</button>
+          <button class="header-btn phone" onclick="window.open(`tel:${normalizeTel(pageData.phone || pageData.whats || '')}`)"><i class="fas fa-phone"></i></button>
         </div>
       </div>
-
       <div class="catalog-tag">QR MİNİ WEB SİTE</div>
     </div>
 
@@ -46,7 +39,6 @@
       Veriler Çekiliyor...
     </div>
 
-    <!-- SETUP (Aynı) -->
     <div id="setup-panel" class="panel">
       <div class="hero-card">
         <div class="hero-title">Yönetici Kurulumu</div>
@@ -101,8 +93,8 @@
       <label>Vitrin (Videolar Klasör Linki)</label>
       <input type="text" id="inVideoLink" placeholder="Drive klasör linki">
 
-      <label>Öne çıkan (Klasör / İçerik)</label>
-      <input type="text" id="inDaily" placeholder="Drive klasör linki (önerilir)">
+      <label>Öne çıkan (Tek Drive Dosyası)</label>
+      <input type="text" id="inDaily" placeholder="Drive dosya linki">
 
       <label style="color: var(--gold); margin-top: 18px; border-top:1px dashed rgba(255,255,255,.18); padding-top:12px;">
         5) ANLIK KAMPANYA (YÖNETİCİDEN — KALICI)
@@ -132,7 +124,6 @@
       <button class="btn-gold" onclick="saveData()">KAYDET</button>
     </div>
 
-    <!-- VIEW -->
     <div id="view-panel" class="panel">
       <div class="certificate">
         <div class="cert-top">
@@ -144,23 +135,49 @@
             ID: <span id="certId">...</span>
           </div>
         </div>
-
         <div class="cert-line"></div>
-
-        <!-- V-CARD (Sadece buton gibi; modal sadece rehbere kaydet gösterecek) -->
+        <!-- EDIT: v-card content -->
         <div class="vcard-shell" onclick="openCardModal()">
-          <div class="vcard-chip">V-CARD</div>
+          <div class="vcard-chip">V-Card</div>
           <div class="vcard-body">
-            <div class="vcard-title" id="vcardName">...</div>
-            <div class="vcard-sub" id="vcardSlogan">DIGITAL V CARD</div>
+            <div class="vcard-title" id="vcardName">İşletme Kartı</div>
+            <div class="vcard-sub" id="vcardSlogan">Kurumsal Dijital Kart</div>
+            <div class="vcard-meta">
+              <span class="vcard-meta-item" id="vcardPhone">+90 5xx xxx xx xx</span>
+            </div>
           </div>
           <div class="vcard-icon"><i class="fas fa-id-card"></i></div>
         </div>
       </div>
 
-      <!-- BUGÜNÜN FIRSATI -->
+      <div class="dock">
+        <div class="dock-inner">
+          <!-- EDIT: hide digital card button -->
+          <div class="dock-btn dock-primary dock-card" onclick="openCardModal()" title="Kart / Rehbere Kaydet">
+            <i class="fas fa-qrcode"></i>
+          </div>
+
+          <div class="dock-btn" onclick="openGallery('photo')" id="btnProducts" title="Ürünlerimiz">
+            <i class="fas fa-cart-shopping"></i>
+          </div>
+
+          <div class="dock-btn" onclick="openGallery('video')" id="btnAds" title="Videolu Reklamlar">
+            <i class="fas fa-store"></i>
+          </div>
+        </div>
+
+        <!-- EDIT: hide digital card label -->
+        <div class="dock-labels">
+          <span class="dock-label-card">Dijital Kart</span>
+          <span>Ürünlerimiz</span>
+          <span>Vitrin</span>
+        </div>
+      </div>
+
+      <!-- EDIT: section header with daily button -->
       <div class="section-head">
         <div class="section-label">Bugünün Fırsatı</div>
+        <button class="daily-inline-btn" onclick="openDaily()" id="btnDaily"><i class="fas fa-star"></i> Öne Çıkanlar</button>
       </div>
 
       <div class="flash glass" id="flashBox">
@@ -176,6 +193,10 @@
           </div>
           <img id="flashImg" alt="" style="display:none;">
         </div>
+        <div class="product-text">
+          <div class="product-title">Premium Akıllı Paket</div>
+          <div class="product-desc">En yeni seri, modern tasarım ve sınırlı stok avantajı.</div>
+        </div>
 
         <div class="price-row">
           <div class="price-box">
@@ -188,30 +209,23 @@
           </div>
         </div>
 
-        <!-- Ana WhatsApp (kampanya/genel bilgi) -->
         <div class="flash-actions">
           <button class="btn-whatsapp" onclick="orderOnWhatsApp()">WhatsApp’tan Bilgi Al</button>
         </div>
 
-        <!-- ÜRÜNLERİMİZ -->
+        <!-- EDIT: products grid -->
         <div class="grid-section" id="productsSection">
           <div class="grid-title">Ürünlerimiz</div>
           <div class="grid-list" id="productGrid"></div>
         </div>
 
-        <!-- VİTRİN -->
+        <!-- EDIT: vitrin grid -->
         <div class="grid-section" id="vitrinSection">
           <div class="grid-title">Vitrin</div>
           <div class="grid-list vitrin-grid" id="vitrinGrid"></div>
         </div>
 
-        <!-- ÖNE ÇIKANLAR (Vitrin sonrası / 2'li grid) -->
-        <div class="grid-section" id="featuredSection">
-          <div class="grid-title">Öne Çıkanlar</div>
-          <div class="grid-list featured-grid" id="featuredGrid"></div>
-        </div>
-
-        <!-- GOOGLE YORUM -->
+        <!-- EDIT: review button -->
         <button class="review-btn" onclick="pageData.review ? window.open(pageData.review, '_blank', 'noopener,noreferrer') : openCardModal()">
           <span class="review-stars">
             <i class="fas fa-star"></i>
@@ -222,6 +236,17 @@
           </span>
           <span>Bizi Değerlendir – Google Yorum</span>
         </button>
+
+        <!-- EDIT: hide save catalog button -->
+        <div class="secondary-actions hide-save">
+          <button class="secondary-btn" onclick="openCardModal()">
+            <span class="secondary-icon"><i class="fas fa-bookmark"></i></span>
+            <span class="secondary-text">
+              <strong>Kataloğu Kaydet</strong>
+              <small>Linki Paylaş • Masaüstüne Ekle</small>
+            </span>
+          </button>
+        </div>
       </div>
 
       <div class="admin-edit" onclick="enableEdit()"><i class="fas fa-pen"></i></div>
@@ -229,7 +254,6 @@
     </div>
   </div>
 
-  <!-- GALERİ OVERLAY (Mevcut sistem) -->
   <div id="gallery-overlay">
     <div class="gallery-header">
       <div class="close-gallery" onclick="closeGallery()"><i class="fas fa-chevron-left"></i> Geri</div>
@@ -238,7 +262,6 @@
     <div class="slider-container" id="slider-track"></div>
   </div>
 
-  <!-- TEKİL MEDYA MODAL (Ürün detay + WhatsApp teklif) -->
   <div id="mediaModal">
     <div class="media-modal-header">
       <div class="close-gallery" onclick="closeMediaModal()"><i class="fas fa-chevron-left"></i> Kapat</div>
@@ -247,20 +270,48 @@
     <div class="media-modal-body" id="mediaModalBody"></div>
   </div>
 
-  <!-- DİJİTAL KART MODAL (SADECE REHBERE KAYDET) -->
   <div id="cardModal">
     <div class="card-header">
       <div class="close-gallery" onclick="closeCardModal()"><i class="fas fa-chevron-left"></i> Kapat</div>
-      <div class="card-title">DIGITAL V CARD</div>
+      <div class="card-title">KART / REHBER</div>
     </div>
     <div class="card-body">
       <div class="card-box">
         <div class="card-headline"><i class="fas fa-user-plus"></i> Rehbere Kaydet</div>
         <div class="mini">
-          Açılan ekranda “Kişilere Ekle / Yeni Kişi Oluştur” seçerek kaydedebilirsin.
+          Tek tuşla işletme kartını oluşturur. Açılan ekranda “Kişilere Ekle / Yeni Kişi Oluştur” seçerek kaydedebilirsin.
         </div>
         <div style="margin-top:12px;">
           <button class="btn-gold" style="margin-top:0;" onclick="saveToContacts()">Rehbere Kaydet</button>
+        </div>
+      </div>
+
+      <div class="card-box">
+        <div class="card-headline"><i class="fas fa-house"></i> Ana Ekrana Kısayol</div>
+        <div class="mini" id="a2hsText">Cihazına göre yönerge burada görünecek.</div>
+
+        <div style="margin-top:12px;">
+          <button class="btn-ghost" onclick="showA2HSHelp()">Ana Ekrana Ekle Yönergesi</button>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="btn-share" onclick="shareCatalog()">Paylaş</button>
+        </div>
+
+        <div id="a2hsSteps" style="margin-top:12px; display:none;">
+        </div>
+      </div>
+
+      <div class="card-box" id="cardQuickLinks" style="display:none;">
+        <div class="card-headline"><i class="fas fa-link"></i> Hızlı Erişim</div>
+        <div class="mini">
+          Bazı cihazlarda aşağıdaki linkler doğrudan işini hızlandırır.
+        </div>
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="hl" id="quickTel" href="#" style="display:none;">Telefonla Ara</a>
+          <a class="hl" id="quickMap" href="#" target="_blank" rel="noopener" style="display:none;">Konum</a>
+          <a class="hl" id="quickInsta" href="#" target="_blank" rel="noopener" style="display:none;">Instagram</a>
+          <a class="hl" id="quickReview" href="#" target="_blank" rel="noopener" style="display:none;">Yorumlar</a>
+          <a class="hl" id="quickWeb" href="#" target="_blank" rel="noopener" style="display:none;">Site/Katalog</a>
         </div>
       </div>
     </div>
