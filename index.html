@@ -25,7 +25,7 @@
           <div class="company-name" id="companyName">...</div>
           <div class="company-slogan" id="companySlogan">...</div>
         </div>
-        <button class="daily-top-btn" onclick="openDaily()" id="btnDaily"><i class="fas fa-star"></i> Öne Çıkan</button>
+        <!-- EDIT: removed top daily button placement -->
         <div class="header-actions">
           <button class="header-btn whatsapp" onclick="orderOnWhatsApp()"><i class="fab fa-whatsapp"></i> Bilgi Al</button>
           <button class="header-btn phone" onclick="window.open(`tel:${normalizeTel(pageData.phone || pageData.whats || '')}`)"><i class="fas fa-phone"></i></button>
@@ -136,11 +136,15 @@
           </div>
         </div>
         <div class="cert-line"></div>
+        <!-- EDIT: v-card content -->
         <div class="vcard-shell" onclick="openCardModal()">
           <div class="vcard-chip">V-Card</div>
           <div class="vcard-body">
             <div class="vcard-title" id="vcardName">İşletme Kartı</div>
-            <div class="vcard-sub">Dijital kartvizit • Rehbere Kaydet</div>
+            <div class="vcard-sub" id="vcardSlogan">Kurumsal Dijital Kart</div>
+            <div class="vcard-meta">
+              <span class="vcard-meta-item" id="vcardPhone">+90 5xx xxx xx xx</span>
+            </div>
           </div>
           <div class="vcard-icon"><i class="fas fa-id-card"></i></div>
         </div>
@@ -148,7 +152,8 @@
 
       <div class="dock">
         <div class="dock-inner">
-          <div class="dock-btn dock-primary" onclick="openCardModal()" title="Kart / Rehbere Kaydet">
+          <!-- EDIT: hide digital card button -->
+          <div class="dock-btn dock-primary dock-card" onclick="openCardModal()" title="Kart / Rehbere Kaydet">
             <i class="fas fa-qrcode"></i>
           </div>
 
@@ -161,14 +166,19 @@
           </div>
         </div>
 
+        <!-- EDIT: hide digital card label -->
         <div class="dock-labels">
-          <span>Dijital Kart</span>
+          <span class="dock-label-card">Dijital Kart</span>
           <span>Ürünlerimiz</span>
           <span>Vitrin</span>
         </div>
       </div>
 
-      <div class="section-label">Bugünün Fırsatı</div>
+      <!-- EDIT: section header with daily button -->
+      <div class="section-head">
+        <div class="section-label">Bugünün Fırsatı</div>
+        <button class="daily-inline-btn" onclick="openDaily()" id="btnDaily"><i class="fas fa-star"></i> Öne Çıkanlar</button>
+      </div>
 
       <div class="flash glass" id="flashBox">
         <div class="flash-head">
@@ -203,19 +213,32 @@
           <button class="btn-whatsapp" onclick="orderOnWhatsApp()">WhatsApp’tan Bilgi Al</button>
         </div>
 
+        <!-- EDIT: products grid -->
         <div class="grid-section" id="productsSection">
           <div class="grid-title">Ürünlerimiz</div>
           <div class="grid-list" id="productGrid"></div>
         </div>
 
+        <!-- EDIT: vitrin grid -->
         <div class="grid-section" id="vitrinSection">
           <div class="grid-title">Vitrin</div>
-          <div class="grid-list" id="vitrinGrid"></div>
+          <div class="grid-list vitrin-grid" id="vitrinGrid"></div>
         </div>
 
-        <button class="review-btn" onclick="pageData.review ? window.open(pageData.review, '_blank', 'noopener,noreferrer') : openCardModal()">Bizi Değerlendir – Google Yorum</button>
+        <!-- EDIT: review button -->
+        <button class="review-btn" onclick="pageData.review ? window.open(pageData.review, '_blank', 'noopener,noreferrer') : openCardModal()">
+          <span class="review-stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </span>
+          <span>Bizi Değerlendir – Google Yorum</span>
+        </button>
 
-        <div class="secondary-actions">
+        <!-- EDIT: hide save catalog button -->
+        <div class="secondary-actions hide-save">
           <button class="secondary-btn" onclick="openCardModal()">
             <span class="secondary-icon"><i class="fas fa-bookmark"></i></span>
             <span class="secondary-text">
