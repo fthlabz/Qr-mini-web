@@ -123,14 +123,6 @@ function driveThumb(fileId, size=1200){
   return `https://drive.google.com/thumbnail?id=${fileId}&sz=w${size}`;
 }
 
-function driveNameToTitle(name, fallback){
-  const cleaned = (name || "").trim();
-  if(!cleaned) return fallback;
-  const withoutExt = cleaned.replace(/\.[^/.]+$/, "");
-  const spaced = withoutExt.replace(/[_-]+/g, " ").trim();
-  return spaced || fallback;
-}
-
 function renderFlash(){
   const img = document.getElementById('flashImg');
   const ph  = document.getElementById('flashPlaceholder');
@@ -216,8 +208,7 @@ function renderGrid(context, link, grid, label){
 
         const name = (file.name || "").trim();
         const meta = parseProductMeta(name);
-        const fallbackTitle = (context === 'product') ? "" : label; // ürünlerde fallback boş
-        const productTitle = driveNameToTitle((meta && meta.title) ? meta.title : name, fallbackTitle);
+        const productTitle = (meta && meta.title) ? meta.title : (name || label);
 
         if(context === 'vitrin'){
           const thumb = driveThumb(file.id, 1200);
@@ -226,7 +217,7 @@ function renderGrid(context, link, grid, label){
               <img src="${thumb}" alt="">
               <span class="vitrin-play"><i class="fas fa-play"></i></span>
             </div>
-            <div class="grid-caption">${escapeHtml(driveNameToTitle(name, label))}</div>
+            <div class="grid-caption">${escapeHtml(name || label)}</div>
           `;
           card.addEventListener('click', () => openGallery('video'));
           grid.appendChild(card);
@@ -329,7 +320,7 @@ function renderFeatured(){
           card.type = 'button';
           card.className = 'grid-card';
 
-          const name = driveNameToTitle(file.name, "Öne Çıkan");
+          const name = (file.name || "").trim() || "Öne Çıkan";
           const thumb = driveThumb(file.id, 1400);
 
           card.innerHTML = `
@@ -398,7 +389,7 @@ function openMediaModal(payload){
   const title = document.getElementById('mediaModalTitle');
   if(!modal || !body || !title) return;
 
-  title.innerText = payload.title || (payload.context === 'vitrin' ? 'Vitrin' : '');
+  title.innerText = payload.title || (payload.context === 'vitrin' ? 'Vitrin' : '☑️');
 
   let mediaHtml = "";
   if(payload.mediaType === 'video'){
@@ -411,7 +402,7 @@ function openMediaModal(payload){
 
   // ÜRÜN bazlı WhatsApp butonu: ürün adını + görsel linkini gönder
   const actionHtml = payload.context === 'product'
-    ? `<button class="btn-whatsapp modal-whatsapp" onclick="orderOnWhatsApp('${escapeJs(payload.title||'')}', '${escapeJs(payload.src||'')}')">WhatsApp Teklif Al</button>`
+    ? `<button class="btn-whatsapp modal-whatsapp" onclick="orderOnWhatsApp('${escapeJs(payload.title||'Ürün')}', '${escapeJs(payload.src||'')}')">WhatsApp Teklif Al</button>`
     : "";
 
   body.innerHTML = `${mediaHtml}${metaHtml}${actionHtml}`;
@@ -492,7 +483,7 @@ function orderOnWhatsApp(productTitle = "", productLink = ""){
   }
 
   const msgLines = [];
-  msgLines.push(`Merhaba, Ürünler hakkında bilgi almak istiyorum.`);
+  msgLines.push(`Merhaba, Ürünleriniz hakkında bilgi almak istiyorum`);
 
   //if(productTitle){
   //  msgLines.push(`Ürün: ${productTitle}`);
