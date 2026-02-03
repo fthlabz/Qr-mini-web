@@ -216,7 +216,8 @@ function renderGrid(context, link, grid, label){
 
         const name = (file.name || "").trim();
         const meta = parseProductMeta(name);
-        const productTitle = driveNameToTitle((meta && meta.title) ? meta.title : name, label);
+        const fallbackTitle = (context === 'product') ? "" : label; // ürünlerde fallback boş
+        const productTitle = driveNameToTitle((meta && meta.title) ? meta.title : name, fallbackTitle);
 
         if(context === 'vitrin'){
           const thumb = driveThumb(file.id, 1200);
@@ -397,7 +398,7 @@ function openMediaModal(payload){
   const title = document.getElementById('mediaModalTitle');
   if(!modal || !body || !title) return;
 
-  title.innerText = payload.title || (payload.context === 'vitrin' ? 'Vitrin' : 'Ürün');
+  title.innerText = payload.title || (payload.context === 'vitrin' ? 'Vitrin' : '');
 
   let mediaHtml = "";
   if(payload.mediaType === 'video'){
@@ -410,7 +411,7 @@ function openMediaModal(payload){
 
   // ÜRÜN bazlı WhatsApp butonu: ürün adını + görsel linkini gönder
   const actionHtml = payload.context === 'product'
-    ? `<button class="btn-whatsapp modal-whatsapp" onclick="orderOnWhatsApp('${escapeJs(payload.title||'Ürün')}', '${escapeJs(payload.src||'')}')">WhatsApp Teklif Al</button>`
+    ? `<button class="btn-whatsapp modal-whatsapp" onclick="orderOnWhatsApp('${escapeJs(payload.title||'')}', '${escapeJs(payload.src||'')}')">WhatsApp Teklif Al</button>`
     : "";
 
   body.innerHTML = `${mediaHtml}${metaHtml}${actionHtml}`;
@@ -491,7 +492,7 @@ function orderOnWhatsApp(productTitle = "", productLink = ""){
   }
 
   const msgLines = [];
-  msgLines.push(`Merhaba, ${pageData.company || "Şirket"} hakkında bilgi almak istiyorum.`);
+  msgLines.push(`Merhaba, Ürünler hakkında bilgi almak istiyorum.`);
 
   //if(productTitle){
   //  msgLines.push(`Ürün: ${productTitle}`);
