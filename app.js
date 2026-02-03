@@ -231,7 +231,7 @@ function renderGrid(context, link, grid, label){
             <div class="grid-media">
               <img src="${proxyUrl}" alt="">
             </div>
-            <div class="grid-caption">${escapeHtml(productTitle)}</div>
+            <div class="grid-caption">☑️</div>
             <button class="grid-cta" type="button" data-cta="wa">
               <i class="fab fa-whatsapp"></i>
               WhatsApp ile teklif al
@@ -327,7 +327,7 @@ function renderFeatured(){
             <div class="grid-media">
               <img src="${thumb}" alt="">
             </div>
-            <div class="grid-caption">🛍️</div>
+            <div class="grid-caption">🔘</div>
           `;
 
           // tık: overlay preview
