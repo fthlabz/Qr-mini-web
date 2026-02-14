@@ -1,16 +1,16 @@
-/* style.css - B2B Premium Toptan Tema */
+/* style.css - B2B Premium Toptan Tema (Final Sürüm) */
 
 :root {
   /* Kurumsal Renk Paleti */
-  --bg-dark: #0f172a;       /* Ana Arka Plan (Slate 900) */
-  --bg-card: #1e293b;       /* Kart Arka Planı (Slate 800) */
+  --bg-dark: #0f172a;       /* Ana Arka Plan */
+  --bg-card: #1e293b;       /* Kart Arka Planı */
   --text-main: #f8fafc;     /* Ana Metin */
   --text-muted: #94a3b8;    /* Yan Metin */
   
   --primary: #d4a373;       /* Gold/Premium Vurgu */
   --primary-hover: #b08968;
   
-  --accent-blue: #3b82f6;   /* İndirme Butonları & Linkler */
+  --accent-blue: #3b82f6;   /* İndirme Butonları */
   --whatsapp: #22c55e;      /* WhatsApp Yeşili */
   
   --border: rgba(255, 255, 255, 0.1);
@@ -71,10 +71,7 @@ body {
   border: 1px solid var(--border);
 }
 
-.header-title {
-  flex: 1;
-  text-align: left;
-}
+.header-title { flex: 1; text-align: left; }
 
 .company-name {
   font-family: 'Space Grotesk', sans-serif;
@@ -174,7 +171,7 @@ body {
 .vcard-sub { font-size: 11px; color: var(--text-muted); }
 .vcard-arrow { color: var(--text-muted); font-size: 12px; }
 
-/* --- FLASH KAMPANYA --- */
+/* --- FLASH KAMPANYA (KUTU AYARI - TAM SIĞDIRMA) --- */
 .flash {
   background: var(--bg-card);
   border: 1px solid var(--primary);
@@ -185,27 +182,31 @@ body {
   position: relative;
   overflow: hidden;
 }
-/* Parlama efekti */
-.flash::before {
-  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(rgba(212, 163, 115, 0.1), transparent 60%);
-  pointer-events: none;
-}
 
 .flash-head { display: flex; justify-content: space-between; margin-bottom: 10px; position: relative; z-index: 1; }
 .flash-title { color: var(--primary); font-weight: 800; font-size: 12px; letter-spacing: 1px; }
 
+/* DÜZELTİLEN KISIM: KUTUYU SABİTLE */
 .flash-media {
-  width: 100%; aspect-ratio: 4/3;
+  width: 100%;
+  height: 300px; /* Sabit yükseklik, ekranı uzatmaz */
   background: #000;
-  border-radius: var(--radius-md);
+  border-radius: 14px;
   overflow: hidden;
   margin-bottom: 12px;
-  display: flex; align-items: center; justify-content: center;
   border: 1px solid var(--border);
-  position: relative; z-index: 1;
+  position: relative;
+  z-index: 1;
 }
-.flash-media img { width: 100%; height: 100%; object-fit: contain; }
+
+/* DÜZELTİLEN KISIM: RESMİ KUTUYA ZORLA YAY (FILL) */
+.flash-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* Resmi kutuya sündürerek tam doldurur */
+  display: block;
+  border-radius: 14px;
+}
 
 .price-row { display: flex; gap: 10px; margin-bottom: 12px; position: relative; z-index: 1; }
 .price-box {
@@ -237,7 +238,7 @@ body {
 /* --- GRIDS --- */
 .grid-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Varsayılan 3 sütun */
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
@@ -266,10 +267,8 @@ body {
   text-align: center;
 }
 
-/* VİTRİN (Video) ÖZEL STİLİ */
-.vitrin-grid {
-  grid-template-columns: 1fr; /* Videolar tek sütun */
-}
+/* VİTRİN (Video) */
+.vitrin-grid { grid-template-columns: 1fr; }
 .vitrin-card .grid-media { aspect-ratio: 16/9; }
 .vitrin-play {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -280,10 +279,9 @@ body {
 /* FEATURED (Kurumsal) */
 .featured-grid { grid-template-columns: 1fr 1fr; }
 
-/* TEKLİF BUTONU (Küçük) */
+/* TEKLİF BUTONU */
 .offer-btn {
-  width: 100%;
-  margin-top: 4px;
+  width: 100%; margin-top: 4px;
   background: rgba(34, 197, 94, 0.1);
   color: var(--whatsapp);
   border: 1px solid rgba(34, 197, 94, 0.2);
@@ -333,18 +331,43 @@ body {
 .close-gallery { color: var(--text-muted); cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 5px; }
 .media-title, .card-title { color: white; font-weight: 700; font-size: 13px; text-transform: uppercase; }
 
+/* DÜZELTİLEN KISIM: MODAL İÇERİĞİ */
 .media-modal-body, .card-body {
   flex: 1; overflow-y: auto; padding: 20px;
+  justify-content: flex-start; /* İçeriği yukarı yasla */
+  padding-bottom: 40px;
 }
 
-.modal-media img { width: 100%; border-radius: var(--radius-md); }
-.modal-media.video iframe { width: 100%; height: 300px; border: none; }
+/* DÜZELTİLEN KISIM: VİDEO BOYUTU */
+.modal-media.video iframe {
+  width: 100%;
+  height: 50vh; /* Ekranın yarısı */
+  border: none; display: block;
+}
+
+/* DÜZELTİLEN KISIM: MODAL RESMİ */
+.modal-media img {
+  width: 100%;
+  max-height: 50vh; /* Resmi ekrana sığdır */
+  object-fit: contain;
+  background: black;
+  border-radius: var(--radius-md);
+}
+
 .modal-meta { margin-top: 15px; background: var(--bg-card); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border); }
 .meta-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
 .meta-code { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; }
 .meta-price { font-size: 18px; color: var(--primary); font-weight: 700; margin-top: 8px; }
 
-/* Card Modal İçeriği */
+/* DÜZELTİLEN KISIM: MODAL BUTONLARI */
+.modal-actions .btn-download,
+.modal-actions .btn-whatsapp {
+  margin-top: 8px;
+  padding: 10px;
+  font-size: 12px;
+}
+
+/* Card Modal */
 .card-box {
   background: var(--bg-card); padding: 16px;
   border-radius: var(--radius-md); margin-bottom: 12px;
@@ -358,69 +381,28 @@ body {
 .mini { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
 .hl { color: var(--primary); text-decoration: none; border-bottom: 1px dotted var(--primary); font-size: 12px; }
 
-/* Gallery Slider */
+/* Slider */
 .slider-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; height: 100%; align-items: center; }
 .slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center; padding: 10px; }
 .media-frame { width: 100%; max-width: 500px; background: var(--bg-card); padding: 10px; border-radius: var(--radius-md); }
 .media-frame img { width: 100%; height: auto; max-height: 70vh; object-fit: contain; }
 .media-frame .meta { text-align: center; margin-top: 10px; font-weight: 600; color: white; }
 
-/* Footer & Edit */
-.footer { text-align: center; font-size: 10px; color: var(--text-muted); opacity: 0.3; padding-top: 20px; }
-.admin-edit {
-  position: fixed; bottom: 20px; right: 20px;
-  width: 44px; height: 44px; background: var(--bg-card);
-  border: 1px solid var(--border); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--text-muted); box-shadow: var(--shadow); cursor: pointer;
-  z-index: 99;
-}
-
-/* --- style.css DÜZELTMELERİ --- */
-
-/* 1. VİDEO BOYUTU (Mobilde daha uzun olsun) */
-.modal-media.video iframe {
-  width: 100%;
-  height: 65vh; /* Ekranın %65'ini kaplasın */
-  border: none;
-  display: block;
-}
-
-/* Modal içindeki resimler de dikeyde taşmasın */
-.modal-media img {
-  max-height: 60vh;
-  object-fit: contain;
-  background: black;
-}
-
-/* 2. KALEM İKONU (Fixed değil, sayfa dibinde sabit) */
-.admin-edit {
-  position: relative; /* Fixed yerine relative yapıyoruz */
-  bottom: auto; 
-  right: auto;
-  margin: 30px auto 10px auto; /* Ortala ve boşluk bırak */
-  width: 100%; /* Tam genişlik */
-  max-width: 200px;
-  height: 40px;
-  border-radius: 99px; /* Oval buton */
-  background: transparent;
-  border: 1px dashed var(--border);
-  box-shadow: none;
-  color: var(--text-muted);
-  font-size: 12px;
-  display: flex; 
-  gap: 8px;
-  opacity: 0.5; /* Biraz silik dursun */
-}
-
-/* İkonun yanına yazı ekleyelim ki ne olduğu anlaşılsın (Opsiyonel CSS ile) */
-.admin-edit::after {
-  content: "Yönetici Düzenleme";
-}
-
-/* Footer boşluğunu ayarlayalım */
+/* Footer & DÜZELTİLEN KALEM BUTONU */
 .footer {
-  padding-top: 10px;
-  margin-bottom: 20px;
+  text-align: center; font-size: 10px; color: var(--text-muted); opacity: 0.3;
+  padding-top: 10px; margin-bottom: 20px;
 }
-
+.admin-edit {
+  position: relative;
+  bottom: auto; right: auto;
+  margin: 30px auto 10px auto;
+  width: 100%; max-width: 200px; height: 40px;
+  background: transparent;
+  border: 1px dashed var(--border); border-radius: 99px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  color: var(--text-muted); opacity: 0.5;
+  box-shadow: none; cursor: pointer;
+  z-index: 1;
+}
+.admin-edit::after { content: "Yönetici Düzenleme"; }
