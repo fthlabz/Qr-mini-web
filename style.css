@@ -375,3 +375,52 @@ body {
   color: var(--text-muted); box-shadow: var(--shadow); cursor: pointer;
   z-index: 99;
 }
+
+/* --- style.css DÜZELTMELERİ --- */
+
+/* 1. VİDEO BOYUTU (Mobilde daha uzun olsun) */
+.modal-media.video iframe {
+  width: 100%;
+  height: 65vh; /* Ekranın %65'ini kaplasın */
+  border: none;
+  display: block;
+}
+
+/* Modal içindeki resimler de dikeyde taşmasın */
+.modal-media img {
+  max-height: 60vh;
+  object-fit: contain;
+  background: black;
+}
+
+/* 2. KALEM İKONU (Fixed değil, sayfa dibinde sabit) */
+.admin-edit {
+  position: relative; /* Fixed yerine relative yapıyoruz */
+  bottom: auto; 
+  right: auto;
+  margin: 30px auto 10px auto; /* Ortala ve boşluk bırak */
+  width: 100%; /* Tam genişlik */
+  max-width: 200px;
+  height: 40px;
+  border-radius: 99px; /* Oval buton */
+  background: transparent;
+  border: 1px dashed var(--border);
+  box-shadow: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  display: flex; 
+  gap: 8px;
+  opacity: 0.5; /* Biraz silik dursun */
+}
+
+/* İkonun yanına yazı ekleyelim ki ne olduğu anlaşılsın (Opsiyonel CSS ile) */
+.admin-edit::after {
+  content: "Yönetici Düzenleme";
+}
+
+/* Footer boşluğunu ayarlayalım */
+.footer {
+  padding-top: 10px;
+  margin-bottom: 20px;
+}
+
